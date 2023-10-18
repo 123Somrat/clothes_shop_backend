@@ -30,9 +30,25 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const database = client.db("clothesDb");
-    const haiku = database.collection("clothes");
+    const clothes = database.collection("clothes");
+    
+    // get product for naike 
+    app.get("/:brand_name",async(req,res)=>{
+        const path = req.path;
+         const search = path.slice(1)
+       console.log(search)
+       const query = { brandName : search};
+       const data =  await clothes.find(query).toArray();  
+   
+        res.send(data)
 
-
+    })
+    // add a clothes
+    app.post("/products",async(req,res)=>{
+        const clothe = req.body;
+        const insertedClothe = await clothes.insertOne(clothe);
+         res.send(insertedClothe)
+    })
 
 
 
