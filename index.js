@@ -13,7 +13,7 @@ app.use(express.json());
 // create route 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -42,7 +42,19 @@ async function run() {
    
         res.send(data)
 
+    }),
+
+     // get single products
+    app.get("/viewdetails/:_id",async(req,res)=>{
+       const id = req.params._id
+       const query = {_id: new ObjectId(id)}
+       const product = await clothes.findOne(query)
+         res.send(product)
     })
+
+
+
+
     // add a clothes
     app.post("/products",async(req,res)=>{
         const clothe = req.body;
