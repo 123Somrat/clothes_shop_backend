@@ -32,7 +32,7 @@ async function run() {
     const database = client.db("clothesDb");
     const clothes = database.collection("clothes");
     
-    // get product for naike 
+    // get product as a brand wise
     app.get("/:brand_name",async(req,res)=>{
         const path = req.path;
          const search = path.slice(1)
@@ -51,8 +51,27 @@ async function run() {
        const product = await clothes.findOne(query)
          res.send(product)
     })
+    
+    // add cart item in db
+    const addedProduct = database.collection("addedProduct");
+     app.post("/addToCart",async(req,res)=>{
+         const addedItem = req.body;
+         const id = req.body._id;
+         const query = {_id: id}
+         // checking item already exiest in db
+         const alreadyExeistInDB = await addedProduct.findOne(query)
 
+         // if item already in db we retun from here otherwise we insert in db
+         if(alreadyExeistInDB){
+             return 
+         } else{
+             const cartItem = await addedProduct.insertOne(addedItem);
+             res.send(cartItem)
 
+         }
+        
+       
+     })
 
 
     // add a clothes
