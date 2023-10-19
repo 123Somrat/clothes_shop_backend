@@ -31,16 +31,26 @@ async function run() {
     await client.connect();
     const database = client.db("clothesDb");
     const clothes = database.collection("clothes");
+    const cartDb = client.db("cartDb")
+    const addedProduct = cartDb.collection("addedProduct");
     
     // get product as a brand wise
     app.get("/:brand_name",async(req,res)=>{
-        const path = req.path;
-         const search = path.slice(1)
-       console.log(search)
-       const query = { brandName : search};
-       const data =  await clothes.find(query).toArray();  
-   
-        res.send(data)
+        const search = req.params.brand_name;
+         const query = { brandName : search};
+         const data =  await clothes.find(query).toArray();  
+         console.log(data.length===0)
+          res.send(data)
+        /* 
+        if(data.length>0){
+          console.log("true")
+           return res.send(data)
+          
+         }else{
+          console.log("false")
+          return  res.send([]) 
+         }
+      */
 
     }),
 
@@ -52,8 +62,14 @@ async function run() {
          res.send(product)
     })
     
-    // add cart item in db
-    const addedProduct = database.collection("addedProduct");
+    // create cart collection for cart item
+     
+   
+
+
+
+
+     // add cart item in db
      app.post("/addToCart",async(req,res)=>{
          const addedItem = req.body;
          const id = req.body._id;
@@ -63,7 +79,7 @@ async function run() {
 
          // if item already in db we retun from here otherwise we insert in db
          if(alreadyExeistInDB){
-             return 
+             return res.send("Item already in cart")
          } else{
              const cartItem = await addedProduct.insertOne(addedItem);
              res.send(cartItem)
@@ -73,6 +89,19 @@ async function run() {
        
      })
 
+    // app.get("/cartItems",async(req,res)=>{
+   //     console.log(req.path)
+       //const CartItem = await addedProduct.find().toArray();
+      // res.send(CartItem)
+      //res.send({
+     //      connection : "oke"
+     // })
+  //})
+
+
+
+
+
 
     // add a clothes
     app.post("/products",async(req,res)=>{
@@ -80,11 +109,6 @@ async function run() {
         const insertedClothe = await clothes.insertOne(clothe);
          res.send(insertedClothe)
     })
-
-
-
-
-
 
 
     // Send a ping to confirm a successful connection
