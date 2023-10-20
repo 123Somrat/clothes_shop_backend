@@ -37,7 +37,6 @@ async function run() {
     // get product as a brand wise
     app.get("/brands/:brand_name",async(req,res)=>{
         const search = req.params.brand_name;
-
          const query = { brandName : search};
          const data =  await clothes.find(query).toArray();  
           res.send(data)
@@ -62,8 +61,10 @@ async function run() {
          res.send(product)
     })
     
-    app.get("/product/:id",async(req,res)=>{
-       const id = req.params._id
+    // get item for update 
+    app.get("/update/:id",async(req,res)=>{
+       const id = req.params.id
+       console.log(id)
        const query = {_id:new ObjectId(id)}
         const product = await clothes.findOne(query)
          res.send(product)
@@ -116,7 +117,6 @@ async function run() {
  // deleteItems from cart
     app.delete("/deleteitem/:id",async(req,res)=>{
       const id = req.params.id;
-      console.log(id)
       const query = {_id:id}
       const data = await addedProduct.deleteOne(query)
          console.log(data)
@@ -125,7 +125,26 @@ async function run() {
      
    })
 
-
+   // update product route
+ app.put("/products/:id",async(req,res)=>{
+      const id = req.params.id;
+      const updatedDocs = req.body
+      const filter = {_id:new ObjectId(id)}
+      const options = {upsert : true};
+      const updatedProduct = {
+        $set: {
+          productName : updatedDocs .productName,
+          brandName :  updatedDocs .brandName,
+          imageUrl : updatedDocs .imageUrl,
+          productType :  updatedDocs .productType,
+          price : updatedDocs .price,
+          description : updatedDocs .description,
+          ratings :  updatedDocs .ratings 
+        },
+      };
+      const result = await clothes.updateOne(filter, updatedProduct, options);
+        res.send(result)
+ })
 
 
 
