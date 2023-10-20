@@ -62,8 +62,15 @@ async function run() {
          res.send(product)
     })
     
+    app.get("/product/:id",async(req,res)=>{
+       const id = req.params._id
+       const query = {_id:new ObjectId(id)}
+        const product = await clothes.findOne(query)
+         res.send(product)
+    })
+
+
    // create cart collection for cart item
-     
     app.get("/cartItems",async(req,res)=>{
       const CartItem = await addedProduct.find().toArray();
       res.send(CartItem)
