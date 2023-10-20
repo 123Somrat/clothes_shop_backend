@@ -35,8 +35,9 @@ async function run() {
     const addedProduct = cartDb.collection("addedProduct");
     
     // get product as a brand wise
-    app.get("/:brand_name",async(req,res)=>{
+    app.get("/brands/:brand_name",async(req,res)=>{
         const search = req.params.brand_name;
+        console.log(search)
          const query = { brandName : search};
          const data =  await clothes.find(query).toArray();  
          console.log(data.length===0)
@@ -62,8 +63,14 @@ async function run() {
          res.send(product)
     })
     
-    // create cart collection for cart item
+   // create cart collection for cart item
      
+    app.get("/cartItems",async(req,res)=>{
+       console.log(req.path)
+      const CartItem = await addedProduct.find().toArray();
+      res.send(CartItem)
+     
+ })
    
 
 
@@ -89,14 +96,6 @@ async function run() {
        
      })
 
-    // app.get("/cartItems",async(req,res)=>{
-   //     console.log(req.path)
-       //const CartItem = await addedProduct.find().toArray();
-      // res.send(CartItem)
-      //res.send({
-     //      connection : "oke"
-     // })
-  //})
 
 
 
