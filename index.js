@@ -37,10 +37,9 @@ async function run() {
     // get product as a brand wise
     app.get("/brands/:brand_name",async(req,res)=>{
         const search = req.params.brand_name;
-        console.log(search)
+
          const query = { brandName : search};
          const data =  await clothes.find(query).toArray();  
-         console.log(data.length===0)
           res.send(data)
         /* 
         if(data.length>0){
@@ -66,13 +65,11 @@ async function run() {
    // create cart collection for cart item
      
     app.get("/cartItems",async(req,res)=>{
-       console.log(req.path)
       const CartItem = await addedProduct.find().toArray();
       res.send(CartItem)
      
  })
-   
-
+    
 
 
 
@@ -108,6 +105,21 @@ async function run() {
         const insertedClothe = await clothes.insertOne(clothe);
          res.send(insertedClothe)
     })
+
+ // deleteItems from cart
+    app.delete("/deleteitem/:id",async(req,res)=>{
+      const id = req.params.id;
+      console.log(id)
+      const query = {_id:id}
+      const data = await addedProduct.deleteOne(query)
+         console.log(data)
+         res.send(data)
+       
+     
+   })
+
+
+
 
 
     // Send a ping to confirm a successful connection
