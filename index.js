@@ -3,7 +3,6 @@ const app = express()
 const cors = require("cors")
 require("dotenv").config();
 const port = process.env.PORT || 3000
-
 const URI = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.jedwi9k.mongodb.net/?retryWrites=true&w=majority`
 
 //middleware 
@@ -40,16 +39,6 @@ async function run() {
          const query = { brandName : search};
          const data =  await clothes.find(query).toArray();  
           res.send(data)
-        /* 
-        if(data.length>0){
-          console.log("true")
-           return res.send(data)
-          
-         }else{
-          console.log("false")
-          return  res.send([]) 
-         }
-      */
 
     }),
 
@@ -101,7 +90,16 @@ async function run() {
        
      })
 
-
+ // add items on collection
+  app.post("/cartItems/:id",async(req,res)=>{
+    const id = req.params.id
+     const data = req.body.item;
+     const query = {_id :id}
+     console.log(query)
+     const options = { "upsert": false };
+     const updatedData = await addedProduct.updateOne(query,{$set : {item : data}},options)
+      res.status(200).send(updatedData)
+  })
 
 
 
