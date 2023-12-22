@@ -37,6 +37,7 @@ async function run() {
     app.get("/brands/:brand_name",async(req,res)=>{
         const search = req.params.brand_name;
          const query = { brandName : search};
+         console.log(query)
          const data =  await clothes.find(query).toArray();  
           res.send(data)
 
