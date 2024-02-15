@@ -123,6 +123,12 @@ async function run() {
      
    })
 
+
+   app.delete("/deletedAllCartItems",async(req,res)=>{
+       const deletedCartItems =await  addedProduct.delete()
+       console.log(deletedCartItems)
+   })
+
    // update product route
  app.put("/products/:id",async(req,res)=>{
       const id = req.params.id;
