@@ -117,16 +117,15 @@ async function run() {
       const id = req.params.id;
       const query = {_id:id}
       const data = await addedProduct.deleteOne(query)
-         console.log(data)
-         res.send(data)
+      res.send(data)
        
      
    })
 
 
-   app.delete("/deletedAllCartItems",async(req,res)=>{
-       const deletedCartItems =await  addedProduct.delete()
-       console.log(deletedCartItems)
+   app.delete("/deleteAllCartItems",async(req,res)=>{
+       const deletedCartItems =await addedProduct.deleteMany({})
+       res.send(deletedCartItems)
    })
 
    // update product route
